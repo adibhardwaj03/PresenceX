@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="PresenceX teacher dashboard for creating secure, location-based attendance sessions"
+  >
+
+  <title>Teacher Dashboard | PresenceX</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <header class="app-header">
+    <div class="header-container">
+
+      <div class="brand-wrapper">
+
+        <div class="brand-logo" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+
+        <div class="brand-info">
+          <span class="brand-name">PresenceX</span>
+          <span class="brand-tag">Smart Attendance System</span>
+        </div>
+
+      </div>
+
+      <div class="header-center">
+        <span class="dashboard-badge">
+          <span class="pulse-dot"></span>
+          Teacher Portal
+        </span>
+      </div>
+
+      <div class="header-actions">
+        <div class="user-profile-preview">
+          <div class="avatar-circle">T</div>
+          <span class="user-greeting">Faculty Console</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+
+    <!-- Page heading -->
+    <section class="dashboard-intro">
+
+      <div>
+        <p class="page-label">Teacher Dashboard</p>
+
+        <h1>
+          Create an Attendance Session
+        </h1>
+
+        <p class="page-description">
+          Start a secure attendance session for your class.
+          Students will use the generated session to mark their attendance.
+        </p>
+      </div>
+
+    </section>
+
+    <section class="dashboard-card">
+
+      <div class="card-header">
+
+        <div>
+          <h2>Session Details</h2>
+
+          <p>
+            Enter the basic information for today's attendance.
+          </p>
+        </div>
+
+      </div>
+
+
+      <form id="createSessionForm">
+
+        <div class="form-section">
+
+          <h3>Faculty Information</h3>
+
+          <div class="form-group">
+
+            <label for="teacherId">
+              Teacher ID
+            </label>
+
+            <input
+              type="text"
+              id="teacherId"
+              name="TeacherID"
+              placeholder="Enter your teacher ID"
+              autocomplete="off"
+              required
+            >
+
+          </div>
+
+        </div>
+
+        <div class="form-section">
+
+          <h3>Class Information</h3>
+
+          <div class="form-row">
+
+            <div class="form-group">
+
+              <label for="subject">
+                Subject
+              </label>
+
+              <input
+                type="text"
+                id="subject"
+                name="subject"
+                placeholder="e.g. Cloud Computing"
+                required
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="durationMinutes">
+                Session Duration
+              </label>
+
+              <div class="input-with-unit">
+
+                <input
+                  type="number"
+                  id="durationMinutes"
+                  name="durationMinutes"
+                  min="1"
+                  max="180"
+                  value="30"
+                  required
+                >
+
+                <span>minutes</span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-section">
+
+          <div class="section-heading-row">
+
+            <div>
+              <h3>Attendance Location</h3>
+
+              <p>
+                Attendance will only be accepted within the selected radius.
+              </p>
+            </div>
+
+            <span id="locationStatus" class="location-status">
+              Location not detected
+            </span>
+
+          </div>
+
+
+          <div class="location-box">
+
+            <div class="location-icon" aria-hidden="true">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path>
+                <circle cx="12" cy="10" r="2.5"></circle>
+              </svg>
+            </div>
+
+            <div class="location-info">
+
+              <strong>
+                Classroom location
+              </strong>
+
+              <p id="coordinatesText">
+                Click the button to detect the teacher's current location.
+              </p>
+
+            </div>
+
+            <button
+              type="button"
+              id="getLocationBtn"
+              class="secondary-button"
+            >
+              Detect Location
+            </button>
+
+          </div>
+
+          <input
+            type="hidden"
+            id="latitude"
+            name="latitude"
+          >
+
+          <input
+            type="hidden"
+            id="longitude"
+            name="longitude"
+          >
+
+
+          <div class="form-group radius-group">
+
+            <label for="radius">
+              Allowed Attendance Radius
+            </label>
+
+            <div class="input-with-unit">
+
+              <input
+                type="number"
+                id="radius"
+                name="radius"
+                min="5"
+                max="500"
+                value="50"
+                required
+              >
+
+              <span>meters</span>
+
+            </div>
+
+            <small>
+              Students must be within this distance from the teacher's
+              session location.
+            </small>
+
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+
+          <button
+            type="submit"
+            id="createSessionBtn"
+            class="primary-button"
+          >
+            Create Attendance Session
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+    <section
+      id="sessionResult"
+      class="dashboard-card session-result hidden"
+    >
+
+      <div class="card-header">
+
+        <div>
+          <p class="page-label">Session Created</p>
+
+          <h2>Your attendance session is ready</h2>
+
+          <p>
+            Share the session with your students to begin attendance.
+          </p>
+        </div>
+
+        <span class="session-active-badge">
+          ACTIVE
+        </span>
+
+      </div>
+
+
+      <div class="session-details">
+
+        <div class="session-detail">
+
+          <span>Session ID</span>
+
+          <strong id="sessionId">
+            —
+          </strong>
+
+        </div>
+
+
+        <div class="session-detail">
+
+          <span>Subject</span>
+
+          <strong id="sessionSubject">
+            —
+          </strong>
+
+        </div>
+
+
+        <div class="session-detail">
+
+          <span>Duration</span>
+
+          <strong>
+            <span id="sessionDuration">—</span> minutes
+          </strong>
+
+        </div>
+
+
+        <div class="session-detail">
+
+          <span>Radius</span>
+
+          <strong>
+            <span id="sessionRadius">—</span> meters
+          </strong>
+
+        </div>
+
+
+        <div class="session-detail">
+
+          <span>Expires At</span>
+
+          <strong id="sessionExpiry">
+            —
+          </strong>
+
+        </div>
+
+      </div>
+
+      <div class="qr-placeholder">
+
+        <div class="qr-placeholder-icon">
+          QR
+        </div>
+
+        <div>
+          <strong>Attendance QR</strong>
+
+          <p>
+            The QR code for this session will appear here.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <div
+      id="messageBox"
+      class="message-box hidden"
+      role="alert"
+    ></div>
+
+  </main>
+
+  <footer class="app-footer">
+
+    <p>
+      PresenceX &copy; 2026
+    </p>
+
+    <p>
+      Secure • Location Verified • Smart Attendance
+    </p>
+
+  </footer>
+
+  <script src="js/teacher.js"></script>
+
+</body>
+</html>
