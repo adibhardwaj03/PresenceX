@@ -1,6 +1,7 @@
 import json
 import boto3
 import uuid
+from decimal import Decimal
 from datetime import datetime, timezone, timedelta
 
 dynamodb = boto3.resource("dynamodb", region_name="ap-south-1")
@@ -8,7 +9,7 @@ dynamodb = boto3.resource("dynamodb", region_name="ap-south-1")
 table = dynamodb.Table("PresenceX-Sessions")
 
 def lambda_handler(event, context):
-    
+
     teacher_id = event.get("TeacherID")
     subject = event.get("subject")
     duration_minutes = event.get("durationMinutes")
@@ -35,11 +36,10 @@ def lambda_handler(event, context):
     try:
         
         duration_minutes = int(duration_minutes)
-        latitude = float(latitude)
-        longitude = float(longitude)
-        radius = float(radius)
+        latitude = Decimal(str(latitude))
+        longitude = Decimal(str(longitude))
+        radius = Decimal(str(radius))
 
-           
         if duration_minutes <= 0:
             return {
                 "statusCode": 400,
@@ -49,7 +49,8 @@ def lambda_handler(event, context):
                 })
             }
 
-        if not (-90 <= latitude <= 90):
+        # Validate latitude
+        if not (Decimal("-90") <= latitude <= Decimal("90")):
             return {
                 "statusCode": 400,
                 "body": json.dumps({
@@ -58,7 +59,7 @@ def lambda_handler(event, context):
                 })
             }
 
-        if not (-180 <= longitude <= 180):
+        if not (Decimal("-180") <= longitude <= Decimal("180")):
             return {
                 "statusCode": 400,
                 "body": json.dumps({
@@ -76,9 +77,8 @@ def lambda_handler(event, context):
                 })
             }
 
-        
         session_id = f"SES-{uuid.uuid4().hex[:8].upper()}"
-       
+
         created_at = datetime.now(timezone.utc)
 
         expires_at = created_at + timedelta(minutes=duration_minutes)
@@ -98,12 +98,25 @@ def lambda_handler(event, context):
 
         table.put_item(Item=session)
 
+        response_session = {
+            "SessionID": session_id,
+            "TeacherID": teacher_id,
+            "subject": subject,
+            "latitude": float(latitude),
+            "longitude": float(longitude),
+            "radius": float(radius),
+            "durationMinutes": duration_minutes,
+            "status": "ACTIVE",
+            "createdAt": created_at.isoformat(),
+            "expiresAt": expires_at.isoformat()
+        }
+
         return {
             "statusCode": 200,
             "body": json.dumps({
                 "success": True,
                 "message": "Attendance session created successfully",
-                "session": session
+                "session": response_session
             })
         }
 
