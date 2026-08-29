@@ -10,6 +10,14 @@ table = dynamodb.Table("PresenceX-Sessions")
 
 def lambda_handler(event, context):
 
+    if "body" in event:
+        body = event["body"]
+
+        if isinstance(body, str):
+            body = json.loads(body)
+
+        event = body
+        
     teacher_id = event.get("TeacherID")
     subject = event.get("subject")
     duration_minutes = event.get("durationMinutes")
