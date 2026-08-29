@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="PresenceX student dashboard for secure attendance"
+  >
+
+  <title>Student Dashboard | PresenceX</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <header class="app-header">
+    <div class="header-container">
+
+      <div class="brand-wrapper">
+        <div class="brand-logo" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+
+        <div class="brand-info">
+          <span class="brand-name">PresenceX</span>
+          <span class="brand-tag">Smart Attendance System</span>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <span class="dashboard-badge badge-student">
+          <span class="pulse-dot dot-student"></span>
+          Student Portal
+        </span>
+      </div>
+
+      <div class="header-actions">
+        <div class="user-profile-preview">
+          <div class="avatar-circle avatar-student">S</div>
+          <span class="user-greeting">Student Console</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+
+  <main class="dashboard-container">
+
+    <section class="dashboard-intro">
+      <div>
+        <p class="page-label">Student Dashboard</p>
+
+        <h1>Mark Your Attendance</h1>
+
+        <p class="page-description">
+          Join the active class session and complete the verification
+          steps to mark your attendance.
+        </p>
+      </div>
+    </section>
+
+
+    <section class="dashboard-card">
+
+      <div class="card-header">
+        <div>
+          <h2>Attendance Verification</h2>
+
+          <p>
+            Complete the following steps to record your attendance.
+          </p>
+        </div>
+      </div>
+
+      <div class="attendance-step">
+
+        <div class="step-number">1</div>
+
+        <div class="step-content">
+          <h3>Student Information</h3>
+
+          <p>
+            Enter your registered student ID.
+          </p>
+
+          <div class="form-group">
+            <label for="studentId">Student ID</label>
+
+            <input
+              type="text"
+              id="studentId"
+              name="studentId"
+              placeholder="Enter your student ID"
+              autocomplete="off"
+            >
+          </div>
+        </div>
+
+      </div>
+
+      <div class="attendance-step">
+
+        <div class="step-number">2</div>
+
+        <div class="step-content">
+
+          <h3>Attendance Session</h3>
+
+          <p>
+            Scan the QR code shown by your teacher.
+          </p>
+
+          <div class="qr-session-box">
+
+            <div class="qr-icon" aria-hidden="true">
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <path d="M14 14h3v3h-3z"></path>
+                <path d="M18 18h3v3h-3z"></path>
+                <path d="M14 21h3"></path>
+                <path d="M21 14v3"></path>
+              </svg>
+            </div>
+
+            <div class="qr-session-info">
+              <strong>Session ID</strong>
+
+              <span id="sessionIdDisplay">
+                No session selected
+              </span>
+            </div>
+
+            <button
+              type="button"
+              id="scanQrBtn"
+              class="secondary-button"
+            >
+              Scan QR
+            </button>
+
+          </div>
+
+          <div class="manual-session">
+
+            <label for="sessionId">
+              Session ID
+            </label>
+
+            <input
+              type="text"
+              id="sessionId"
+              name="sessionId"
+              placeholder="Enter session ID"
+              autocomplete="off"
+            >
+
+            <small>
+              The session ID is normally filled automatically after
+              scanning the QR code.
+            </small>
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="attendance-step">
+
+        <div class="step-number">3</div>
+
+        <div class="step-content">
+
+          <h3>Location Verification</h3>
+
+          <p>
+            Your location is checked to make sure you are inside
+            the allowed attendance area.
+          </p>
+
+          <div class="location-box">
+
+            <div class="location-icon" aria-hidden="true">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path>
+                <circle cx="12" cy="10" r="2.5"></circle>
+              </svg>
+            </div>
+
+            <div class="location-info">
+              <strong>Your Current Location</strong>
+
+              <p id="locationText">
+                Location has not been checked yet.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              id="verifyLocationBtn"
+              class="secondary-button"
+            >
+              Verify Location
+            </button>
+
+          </div>
+
+          <input type="hidden" id="latitude">
+          <input type="hidden" id="longitude">
+
+          <div
+            id="locationStatus"
+            class="verification-status"
+          ></div>
+
+        </div>
+      </div>
+
+
+      <!-- Face Verification -->
+      <div class="attendance-step">
+
+        <div class="step-number">4</div>
+
+        <div class="step-content">
+
+          <h3>Face Verification</h3>
+
+          <p>
+            Use your camera to verify your identity.
+          </p>
+
+          <div class="face-verification-box">
+
+            <div id="cameraPreview" class="camera-preview">
+
+              <div class="camera-placeholder">
+                <div class="camera-icon">Face</div>
+
+                <span>
+                  Camera preview will appear here.
+                </span>
+              </div>
+
+            </div>
+
+            <div class="camera-actions">
+
+              <button
+                type="button"
+                id="startCameraBtn"
+                class="secondary-button"
+              >
+                Start Camera
+              </button>
+
+              <button
+                type="button"
+                id="captureFaceBtn"
+                class="secondary-button"
+                disabled
+              >
+                Capture Face
+              </button>
+
+            </div>
+
+            <div
+              id="faceStatus"
+              class="verification-status"
+            ></div>
+
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          id="markAttendanceBtn"
+          class="primary-button"
+        >
+          Mark Attendance
+        </button>
+
+      </div>
+
+
+      <div
+        id="attendanceResult"
+        class="attendance-result hidden"
+      >
+
+        <div class="result-icon">✓</div>
+
+        <div>
+          <h3>Attendance Recorded</h3>
+
+          <p id="attendanceMessage">
+            Your attendance has been successfully recorded.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div
+        id="messageBox"
+        class="message-box hidden"
+        role="alert"
+      ></div>
+
+    </section>
+
+
+    <section class="security-info">
+
+      <div class="security-item">
+        <strong>QR Verified</strong>
+
+        <span>
+          Attendance is linked to an active classroom session.
+        </span>
+      </div>
+
+      <div class="security-item">
+        <strong>Location Verified</strong>
+
+        <span>
+          Your location is checked against the classroom radius.
+        </span>
+      </div>
+
+      <div class="security-item">
+        <strong>Face Verified</strong>
+
+        <span>
+          Face verification helps prevent proxy attendance.
+        </span>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <footer class="app-footer">
+
+    <p>
+      PresenceX &copy; 2026
+    </p>
+
+    <p>
+      Secure • Location Verified • Face Verified
+    </p>
+
+  </footer>
+
+
+  <script src="js/student.js"></script>
+
+</body>
+</html>
