@@ -2,20 +2,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const studentIdInput = document.getElementById("studentId");
 
-  const sessionIdDisplay = document.getElementById("sessionIdDisplay");
-  const sessionIdInput = document.getElementById("sessionId");
-  const scanQrBtn = document.getElementById("scanQrBtn");
+  const sessionIdDisplay =
+    document.getElementById("sessionIdDisplay");
 
-  const locationText = document.getElementById("locationText");
-  const verifyLocationBtn = document.getElementById("verifyLocationBtn");
-  const latitudeInput = document.getElementById("latitude");
-  const longitudeInput = document.getElementById("longitude");
-  const locationStatus = document.getElementById("locationStatus");
+  const sessionIdInput =
+    document.getElementById("sessionId");
 
-  const cameraPreview = document.getElementById("cameraPreview");
-  const startCameraBtn = document.getElementById("startCameraBtn");
-  const captureFaceBtn = document.getElementById("captureFaceBtn");
-  const faceStatus = document.getElementById("faceStatus");
+  const scanQrBtn =
+    document.getElementById("scanQrBtn");
+
+  const qrScannerContainer =
+    document.getElementById("qrScanner");
+
+  const closeQrScanner =
+    document.getElementById("closeQrScanner");
+
+  const locationText =
+    document.getElementById("locationText");
+
+  const verifyLocationBtn =
+    document.getElementById("verifyLocationBtn");
+
+  const latitudeInput =
+    document.getElementById("latitude");
+
+  const longitudeInput =
+    document.getElementById("longitude");
+
+  const locationStatus =
+    document.getElementById("locationStatus");
+
+  const cameraPreview =
+    document.getElementById("cameraPreview");
+
+  const startCameraBtn =
+    document.getElementById("startCameraBtn");
+
+  const captureFaceBtn =
+    document.getElementById("captureFaceBtn");
+
+  const faceStatus =
+    document.getElementById("faceStatus");
 
   const markAttendanceBtn =
     document.getElementById("markAttendanceBtn");
@@ -30,6 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("messageBox");
 
 
+  let qrScanner = null;
+  let scannerRunning = false;
+
   let mediaStream = null;
   let videoElement = null;
   let faceImage = null;
@@ -42,7 +72,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!messageBox) return;
 
     messageBox.textContent = message;
-    messageBox.className = `message-box ${type}`;
+    messageBox.className =
+      `message-box ${type}`;
+
     messageBox.classList.remove("hidden");
   }
 
@@ -56,7 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   function updateSessionDisplay() {
-    const sessionId = sessionIdInput.value.trim();
+    const sessionId =
+      sessionIdInput.value.trim();
 
     if (sessionIdDisplay) {
       sessionIdDisplay.textContent =
@@ -65,18 +98,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  sessionIdInput?.addEventListener("input", () => {
-    updateSessionDisplay();
-    hideMessage();
-  });
+  sessionIdInput?.addEventListener(
+    "input",
+    () => {
+      updateSessionDisplay();
+      hideMessage();
+    }
+  );
 
 
-  scanQrBtn?.addEventListener("click", () => {
-    showMessage(
-      "QR scanner will be connected in the next step. You can enter the Session ID manually for now.",
-      "info"
-    );
-  });
+  scanQrBtn?.addEventListener(
+    "click",
+    () => {
+      showMessage(
+        "QR scanner will be connected in the next step. You can enter the Session ID manually for now.",
+        "info"
+      );
+    }
+  );
 
 
   function verifyLocation() {
@@ -93,7 +132,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     verifyLocationBtn.disabled = true;
-    verifyLocationBtn.textContent = "Checking...";
+    verifyLocationBtn.textContent =
+      "Checking...";
 
     locationStatus.textContent =
       "Getting your current location...";
@@ -105,9 +145,14 @@ document.addEventListener("DOMContentLoaded", () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
 
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        const accuracy = Math.round(position.coords.accuracy);
+        const latitude =
+          position.coords.latitude;
+
+        const longitude =
+          position.coords.longitude;
+
+        const accuracy =
+          Math.round(position.coords.accuracy);
 
         latitudeInput.value = latitude;
         longitudeInput.value = longitude;
@@ -131,20 +176,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
       (error) => {
 
-        let message = "Unable to get your location.";
+        let message =
+          "Unable to get your location.";
 
-        if (error.code === error.PERMISSION_DENIED) {
+        if (
+          error.code ===
+          error.PERMISSION_DENIED
+        ) {
           message =
             "Location permission was denied. Please allow location access.";
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
+        } else if (
+          error.code ===
+          error.POSITION_UNAVAILABLE
+        ) {
           message =
             "Your current location is unavailable.";
-        } else if (error.code === error.TIMEOUT) {
+        } else if (
+          error.code ===
+          error.TIMEOUT
+        ) {
           message =
             "Location request timed out. Please try again.";
         }
 
-        locationStatus.textContent = message;
+        locationStatus.textContent =
+          message;
+
         locationStatus.className =
           "verification-status error";
 
@@ -194,14 +251,19 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
 
       startCameraBtn.disabled = true;
-      startCameraBtn.textContent = "Opening Camera...";
+      startCameraBtn.textContent =
+        "Opening Camera...";
 
       mediaStream =
         await navigator.mediaDevices.getUserMedia({
           video: {
             facingMode: "user",
-            width: { ideal: 640 },
-            height: { ideal: 480 }
+            width: {
+              ideal: 640
+            },
+            height: {
+              ideal: 480
+            }
           },
           audio: false
         });
@@ -216,13 +278,17 @@ document.addEventListener("DOMContentLoaded", () => {
       videoElement.playsInline = true;
       videoElement.muted = true;
 
-      videoElement.srcObject = mediaStream;
+      videoElement.srcObject =
+        mediaStream;
 
-      cameraPreview.appendChild(videoElement);
+      cameraPreview.appendChild(
+        videoElement
+      );
 
 
       startCameraBtn.disabled = false;
-      startCameraBtn.textContent = "Stop Camera";
+      startCameraBtn.textContent =
+        "Stop Camera";
 
       captureFaceBtn.disabled = false;
 
@@ -234,7 +300,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (error) {
 
-      console.error("Camera error:", error);
+      console.error(
+        "Camera error:",
+        error
+      );
 
       faceStatus.textContent =
         "Unable to access the camera. Please check your camera permission.";
@@ -251,7 +320,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function captureFace() {
 
-    if (!videoElement || !mediaStream) {
+    if (
+      !videoElement ||
+      !mediaStream
+    ) {
       showMessage(
         "Please start the camera first.",
         "error"
@@ -283,7 +355,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     faceImage =
-      canvas.toDataURL("image/jpeg", 0.85);
+      canvas.toDataURL(
+        "image/jpeg",
+        0.85
+      );
 
     faceCaptured = true;
 
@@ -298,7 +373,9 @@ document.addEventListener("DOMContentLoaded", () => {
     image.src = faceImage;
     image.alt = "Captured face";
 
-    cameraPreview.appendChild(image);
+    cameraPreview.appendChild(
+      image
+    );
 
 
     startCameraBtn.textContent =
@@ -320,7 +397,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       mediaStream
         .getTracks()
-        .forEach((track) => track.stop());
+        .forEach((track) => {
+          track.stop();
+        });
 
       mediaStream = null;
     }
@@ -337,6 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "click",
     startCamera
   );
+
 
   captureFaceBtn?.addEventListener(
     "click",
@@ -383,7 +463,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    if (!locationVerified || !latitude || !longitude) {
+    if (
+      !locationVerified ||
+      !latitude ||
+      !longitude
+    ) {
       showMessage(
         "Please verify your location first.",
         "error"
@@ -394,7 +478,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    if (!faceCaptured || !faceImage) {
+    if (
+      !faceCaptured ||
+      !faceImage
+    ) {
       showMessage(
         "Please capture your face before marking attendance.",
         "error"
@@ -421,40 +508,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     markAttendanceBtn.disabled = true;
+
     markAttendanceBtn.textContent =
       "Verifying...";
 
 
     try {
-
-      /*
-       * The API Gateway URL will be added here
-       * when the attendance Lambda is ready.
-       */
-
-      /*
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(attendanceData)
-      });
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(
-          result.message || "Attendance verification failed."
-        );
-      }
-
-      attendanceResult.classList.remove("hidden");
-
-      attendanceMessage.textContent =
-        result.message || "Attendance recorded successfully.";
-      */
-
 
       showMessage(
         "All verification details are ready. Backend attendance verification will be connected next.",
@@ -477,6 +536,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } finally {
 
       markAttendanceBtn.disabled = false;
+
       markAttendanceBtn.textContent =
         "Mark Attendance";
     }

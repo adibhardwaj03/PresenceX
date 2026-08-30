@@ -433,3 +433,130 @@ body:has(#createSessionForm) .qr-placeholder p {
     flex-direction: column;
   }
 }
+
+.qr-section {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--slate-200);
+}
+
+.qr-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  color: var(--slate-600);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.qr-section-heading::before,
+.qr-section-heading::after {
+  content: "";
+  height: 1px;
+  background-color: var(--slate-200);
+  width: 18%;
+  max-width: 180px;
+}
+
+.qr-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem 1.75rem;
+}
+
+.qr-code-box {
+  width: 248px;
+  height: 248px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.qr-code-box canvas,
+.qr-code-box img {
+  display: block;
+  width: 220px !important;
+  height: 220px !important;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.qr-help-text {
+  margin: 1rem 0 0;
+  max-width: 360px;
+  color: var(--slate-500);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.status-active {
+  background-color: var(--success-50);
+  color: var(--success-700);
+  border: 1px solid var(--success-200);
+}
+
+.session-result-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 1.4rem;
+  border-bottom: 1px solid var(--slate-200);
+}
+
+.result-label {
+  margin: 0 0 0.2rem;
+  color: var(--slate-600);
+  font-size: 0.9rem;
+}
+
+.session-result-header h2 {
+  margin: 0;
+  color: var(--slate-900);
+  font-size: 1.45rem;
+  line-height: 1.3;
+}
+
+.session-result-header p:last-child {
+  margin: 0.4rem 0 0;
+  color: var(--slate-600);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 700px) {
+  .qr-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+  }
+
+  .qr-section-heading::before,
+  .qr-section-heading::after {
+    width: 10%;
+  }
+
+  .qr-code-box {
+    width: 230px;
+    height: 230px;
+  }
+
+  .qr-code-box canvas,
+  .qr-code-box img {
+    width: 200px !important;
+    height: 200px !important;
+  }
+
+  .session-result-header {
+    flex-direction: column;
+  }
+}

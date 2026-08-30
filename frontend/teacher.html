@@ -376,21 +376,19 @@
 
       </div>
 
-      <div class="qr-placeholder">
+     <div class="qr-section">
+  <div class="qr-section-heading">
+    <span>Scan this QR code to join the session</span>
+  </div>
 
-        <div class="qr-placeholder-icon">
-          QR
-        </div>
+  <div class="qr-card">
+    <div id="qrCode" class="qr-code-box"></div>
 
-        <div>
-          <strong>Attendance QR</strong>
-
-          <p>
-            The QR code for this session will appear here.
-          </p>
-        </div>
-
-      </div>
+    <p class="qr-help-text">
+      Students can scan this QR to mark their attendance.
+    </p>
+  </div>
+</div>
 
     </section>
 
@@ -413,7 +411,7 @@
     </p>
 
   </footer>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="js/teacher.js"></script>
 
 </body>

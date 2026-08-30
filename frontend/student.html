@@ -152,22 +152,35 @@
             </div>
 
             <div class="qr-session-info">
-              <strong>Session ID</strong>
+  <strong>Session ID</strong>
 
-              <span id="sessionIdDisplay">
-                No session selected
-              </span>
-            </div>
+  <span id="sessionIdDisplay">
+    No session selected
+  </span>
+</div>
 
-            <button
-              type="button"
-              id="scanQrBtn"
-              class="secondary-button"
-            >
-              Scan QR
-            </button>
+<button
+  type="button"
+  id="scanQrBtn"
+  class="secondary-button"
+>
+  Scan QR
+</button>
 
-          </div>
+<!-- QR Scanner -->
+<div id="qrScanner" class="qr-scanner hidden">
+  <div id="qrReader"></div>
+
+  <button
+    type="button"
+    id="closeQrScanner"
+    class="secondary-button"
+  >
+    Close Scanner
+  </button>
+</div>
+
+</div>
 
           <div class="manual-session">
 
@@ -396,7 +409,7 @@
 
   </footer>
 
-
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <script src="js/student.js"></script>
 
 </body>

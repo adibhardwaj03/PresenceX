@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const API_URL =
+    "https://897qncdmh6.execute-api.ap-south-1.amazonaws.com/sessions";
 
   const form = document.getElementById("createSessionForm");
 
@@ -7,12 +9,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const durationInput = document.getElementById("durationMinutes");
   const radiusInput = document.getElementById("radius");
 
-  const getLocationBtn = document.getElementById("getLocationBtn");
-  const locationStatus = document.getElementById("locationStatus");
-  const coordinatesText = document.getElementById("coordinatesText");
+  const getLocationBtn =
+    document.getElementById("getLocationBtn");
 
-  const latitudeInput = document.getElementById("latitude");
-  const longitudeInput = document.getElementById("longitude");
+  const locationStatus =
+    document.getElementById("locationStatus");
+
+  const coordinatesText =
+    document.getElementById("coordinatesText");
+
+  const latitudeInput =
+    document.getElementById("latitude");
+
+  const longitudeInput =
+    document.getElementById("longitude");
 
   const createSessionBtn =
     document.getElementById("createSessionBtn");
@@ -38,10 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const sessionExpiryDisplay =
     document.getElementById("sessionExpiry");
 
+  const qrCodeContainer =
+    document.getElementById("qrCode");
 
   let locationCaptured = false;
-
-  const API_URL = "YOUR_API_GATEWAY_URL";
 
 
   function showMessage(message, type = "info") {
@@ -61,17 +71,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
+  function setLocationStatus(text, type) {
+    if (!locationStatus) return;
+
+    locationStatus.textContent = text;
+    locationStatus.className =
+      `location-status ${type}`;
+  }
+
+
   function detectLocation() {
     hideMessage();
 
     if (!navigator.geolocation) {
       locationCaptured = false;
 
-      locationStatus.textContent =
-        "Geolocation not supported";
-
-      locationStatus.className =
-        "location-status error";
+      setLocationStatus(
+        "Location Unsupported",
+        "error"
+      );
 
       showMessage(
         "Your browser does not support location services.",
@@ -81,17 +99,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-
     getLocationBtn.disabled = true;
     getLocationBtn.textContent = "Detecting...";
-
-    locationStatus.textContent = "Detecting location...";
-    locationStatus.className = "location-status warning";
-
+    setLocationStatus("Detecting...", "warning");
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-
         const latitude =
           position.coords.latitude;
 
@@ -101,66 +114,66 @@ document.addEventListener("DOMContentLoaded", () => {
         const accuracy =
           Math.round(position.coords.accuracy);
 
-
         latitudeInput.value = latitude;
         longitudeInput.value = longitude;
 
         locationCaptured = true;
-
 
         coordinatesText.textContent =
           `Latitude: ${latitude.toFixed(6)}, ` +
           `Longitude: ${longitude.toFixed(6)} ` +
           `(±${accuracy}m)`;
 
-
-        locationStatus.textContent =
-          "Location Detected";
-
-        locationStatus.className =
-          "location-status success";
-
+        setLocationStatus(
+          "Location Detected",
+          "success"
+        );
 
         getLocationBtn.disabled = false;
         getLocationBtn.textContent =
           "Update Location";
       },
 
-
       (error) => {
-
         locationCaptured = false;
 
         let message =
           "Unable to detect your location.";
 
-        if (error.code === 1) {
+        if (
+          error.code ===
+          error.PERMISSION_DENIED
+        ) {
           message =
-            "Location permission was denied. Please allow location access.";
-        } else if (error.code === 2) {
+            "Location permission was denied. Please allow location access in your browser.";
+        } else if (
+          error.code ===
+          error.POSITION_UNAVAILABLE
+        ) {
           message =
-            "Your current location is unavailable.";
-        } else if (error.code === 3) {
+            "Your location is currently unavailable. Please check GPS or location services.";
+        } else if (
+          error.code ===
+          error.TIMEOUT
+        ) {
           message =
-            "Location request timed out. Please try again.";
+            "Location detection timed out. Please try again.";
         }
 
+        setLocationStatus(
+          "Detection Failed",
+          "error"
+        );
 
-        locationStatus.textContent =
-          "Detection Failed";
-
-        locationStatus.className =
-          "location-status error";
-
-
-        showMessage(message, "error");
-
+        showMessage(
+          message,
+          "error"
+        );
 
         getLocationBtn.disabled = false;
         getLocationBtn.textContent =
           "Detect Location";
       },
-
 
       {
         enableHighAccuracy: true,
@@ -171,11 +184,37 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
+  function generateQRCode(sessionId) {
+    if (!qrCodeContainer) return;
+
+    qrCodeContainer.innerHTML = "";
+
+    if (
+      typeof QRCode === "undefined"
+    ) {
+      showMessage(
+        "QR generator could not be loaded. Please refresh the page.",
+        "error"
+      );
+
+      return;
+    }
+
+    new QRCode(qrCodeContainer, {
+      text: sessionId,
+      width: 220,
+      height: 220,
+      colorDark: "#0f172a",
+      colorLight: "#ffffff",
+      correctLevel:
+        QRCode.CorrectLevel.H
+    });
+  }
+
+
   async function createSession(event) {
     event.preventDefault();
-
     hideMessage();
-
 
     const teacherId =
       teacherIdInput.value.trim();
@@ -220,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (
       !Number.isInteger(duration) ||
-      duration <= 0 ||
+      duration < 1 ||
       duration > 180
     ) {
       showMessage(
@@ -235,11 +274,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (
       !Number.isFinite(radius) ||
-      radius <= 0 ||
+      radius < 5 ||
       radius > 500
     ) {
       showMessage(
-        "Attendance radius must be between 1 and 500 meters.",
+        "Attendance radius must be between 5 and 500 meters.",
         "error"
       );
 
@@ -254,11 +293,15 @@ document.addEventListener("DOMContentLoaded", () => {
       !Number.isFinite(longitude)
     ) {
       showMessage(
-        "Please detect your location before creating the session.",
+        "Please detect the classroom location before creating the session.",
         "warning"
       );
 
-      getLocationBtn.focus();
+      getLocationBtn.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
       return;
     }
 
@@ -274,33 +317,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     createSessionBtn.disabled = true;
+
     createSessionBtn.textContent =
       "Creating Session...";
 
 
     try {
+      const response =
+        await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+          body:
+            JSON.stringify(requestData)
+        });
 
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(requestData)
-      });
 
+      let data;
 
-      const data = await response.json();
-
-
-      if (!response.ok || !data.success) {
+      try {
+        data =
+          await response.json();
+      } catch {
         throw new Error(
-          data.message ||
-          "Unable to create attendance session."
+          "The server returned an invalid response."
         );
       }
 
 
-      const session = data.session;
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+        throw new Error(
+          data.message ||
+          "Unable to create the attendance session."
+        );
+      }
+
+
+      const session =
+        data.session;
 
 
       sessionIdDisplay.textContent =
@@ -320,32 +379,41 @@ document.addEventListener("DOMContentLoaded", () => {
         new Date(session.expiresAt);
 
       sessionExpiryDisplay.textContent =
-        expiryTime.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit"
-        });
+        expiryTime.toLocaleTimeString(
+          [],
+          {
+            hour: "2-digit",
+            minute: "2-digit"
+          }
+        );
 
 
-      sessionResult.classList.remove("hidden");
+      generateQRCode(
+        session.SessionID
+      );
+
+
+      sessionResult.classList.remove(
+        "hidden"
+      );
+
+
+      showMessage(
+        `Attendance session ${session.SessionID} created successfully.`,
+        "success"
+      );
+
 
       sessionResult.scrollIntoView({
         behavior: "smooth",
         block: "center"
       });
 
-
-      showMessage(
-        "Attendance session created successfully.",
-        "success"
-      );
-
     } catch (error) {
-
       console.error(
-        "Create session error:",
+        "Session creation failed:",
         error
       );
-
 
       showMessage(
         error.message ||
@@ -354,8 +422,8 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
     } finally {
-
       createSessionBtn.disabled = false;
+
       createSessionBtn.textContent =
         "Create Attendance Session";
     }
@@ -372,5 +440,4 @@ document.addEventListener("DOMContentLoaded", () => {
     "submit",
     createSession
   );
-
 });
